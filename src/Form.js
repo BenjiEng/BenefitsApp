@@ -19,10 +19,6 @@ class Form extends Component {
         }));
     }
 
-    // removeDependent = (e) => {
-    //     this.state.dependents.splice(-1, 1);
-    // }
-
     onCalculate = (e) => {
         e.preventDefault(); 
         this.props.onCalculate(this.state);

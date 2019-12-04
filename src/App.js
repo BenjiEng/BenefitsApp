@@ -12,9 +12,8 @@ class App extends Component {
     checks_per_year: 26,
     monthly_pay: 2000,
     yearly_deduction: 1000,
-    yearly_deduction_a: 900,
-    beneficiary_deduction_year: 500,
-    beneficiary_A_deduction_year: 450,
+    beneficiary_yearly_deduction: 500,
+    discount: .1
   }
  
   state = {
@@ -22,6 +21,7 @@ class App extends Component {
     firstName: '',
     lastName: '',
     monthlyDeduction: 0,
+    discount: false,
     dependentsDeduction: [],
     remainder: this.amounts.monthly_pay
   }
@@ -32,7 +32,8 @@ class App extends Component {
     this.setState({input});
     this.state.firstName = input.firstName;
     this.state.lastName = input.lastName;
-    this.state.remainder = this.amounts.monthly_pay
+    this.state.remainder = this.amounts.monthly_pay;
+    this.state.dependentsDeduction = [];
     //update calculations
     this._calculateDeductions(input.firstName, input.dependents);
   }
@@ -60,10 +61,10 @@ class App extends Component {
               </tr>
               <tr>
                 <td>
-                  Monthly Deduction
+                  {this.state.firstName} {this.state.lastName} <small>{this.state.discount === true ? '(-10%)' : ''}</small>
                 </td>
                 <td>
-                  ${this.state.monthlyDeduction}
+                  -${this.state.monthlyDeduction}
                 </td>
               </tr>
               {
@@ -71,10 +72,10 @@ class App extends Component {
                   return (
                     <tr>
                       <td>
-                        {d.name}
+                        {d.name} <small>{d.discount === true ? '(-10%)' : ''}</small>
                       </td>
                       <td>
-                        ${d.amount}
+                        -${d.amount}
                       </td>
                     </tr> 
                   )
@@ -85,7 +86,7 @@ class App extends Component {
                   Remainder
                 </td>
                 <td>
-                  ${this.state.remainder}
+                  ${this.state.remainder} 
                 </td>
               </tr>
               
@@ -100,11 +101,13 @@ class App extends Component {
     this._calculateMonthlyDeduction(firstName);
     this._calculateDependentDeduction(dependents);
     this.state.remainder.toFixed(2);
+    debugger
   }
 
   _calculateMonthlyDeduction(firstName) {
     if(firstName[0].toUpperCase() === 'A') {
-      this.state.monthlyDeduction = (this.amounts.yearly_deduction_a/this.amounts.checks_per_year).toFixed(2);
+      this.state.monthlyDeduction = ((this.amounts.yearly_deduction * (1-this.amounts.discount)/this.amounts.checks_per_year)).toFixed(2);
+      this.state.discount = true;
     } else {
       this.state.monthlyDeduction = (this.amounts.yearly_deduction/this.amounts.checks_per_year).toFixed(2);
     }
@@ -113,24 +116,27 @@ class App extends Component {
 
   _calculateDependentDeduction(dependents) {
     var deduction = 0;
-    debugger
     dependents.forEach(e => {
       if (e.first[0].toUpperCase() === 'A') {
-        deduction = (this.amounts.beneficiary_A_deduction_year/this.amounts.checks_per_year).toFixed(2);
+        deduction = ((this.amounts.beneficiary_yearly_deduction * (1-this.amounts.discount)/this.amounts.checks_per_year)).toFixed(2);
         this.state.remainder -= deduction;
+        this.state.remainder.toFixed(2);
         this.state.dependentsDeduction.push(
           { 
             name: e.first + e.last,
-            amount: deduction
+            amount: deduction,
+            discount: true
           }
         );
       } else {
-        deduction = (this.amounts.beneficiary_deduction_year/this.amounts.checks_per_year).toFixed(2);
+        deduction = (this.amounts.beneficiary_yearly_deduction/this.amounts.checks_per_year).toFixed(2);
         this.state.remainder -= deduction;
+        this.state.remainder.toFixed(2);
         this.state.dependentsDeduction.push(
           { 
             name: e.first + e.last,
-            amount: deduction
+            amount: deduction,
+            discount: false
           }
         );
       }
