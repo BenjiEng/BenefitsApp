@@ -1,3 +1,5 @@
+import React, {Component} from 'react';
+
 class Popup extends React.Component {
     state = {
         dependents: []
@@ -6,35 +8,59 @@ class Popup extends React.Component {
     //add a new dependent
     addDependent = (e) => {
         this.setState((prevState) => ({
-            dependents: [...prevState.employee, {first: "", last: ""}]
+            dependents: [...prevState.dependents, {dfirst: "", dlast: ""}]
         }));
     }
+
+    handleChange = (e) => {
+        if (["dfirst", "dlast"].includes(e.target.className) ) {
+            let dependents = [...this.state.dependents];
+            dependents[e.target.dataset.id][e.target.className] = e.target.value;
+            this.setState({ dependents })
+        } else {
+            this.setState({ [e.target.name]: e.target.value })
+        }
+    };
+
+
+    //caller to send data to App
+    submitDependents = (e) => {
+        this.props.addDependents(this.state.dependents);
+        this.setState({   
+            dependents: []
+        });
+    };
+
+    //prevent submit of all buttons
+    handleSubmit = (e) => {
+        e.preventDefault();
+    };  
+
     render() {
       return (
-        <div className='popup'>
-            <h4>Dependents</h4>
-            <button onClick={this.addEmployee}>Add New Employee</button>
+        <div className='popup' onSubmit={this.handleSubmit} onChange={this.handleChange}>
+            <div class="popup-inner">
+            <button onClick={this.addDependent}>New Dependent</button>
                 {
-                    this.state.employee.map((val, idx) => {
+                    this.state.dependents.map((val, idx) => {
                         let firstId = `first-${idx}`;
                         let lastId=`last-${idx}`;
-                        let isDependentId=`isDependent-${idx}`;
                         return (
                             <section key={idx}>
                                 <div>
-                                    <input name={firstId} data-id={idx} id={firstId} className="first" placeholder='First Name'/>
-                                    <input name={lastId} data-id={idx} id={lastId} className="last" placeholder='Last Name'/>
-
-                                    <label htmlFor={isDependentId} >Dependent</label>
-                                    <input name={isDependentId} data-id={idx} id={isDependentId} className="isDependent" type="checkbox" />
-                                    <Popup></Popup>
+                                    <input name={firstId} data-id={idx} id={firstId} className="dfirst" placeholder='First Name'/>
+                                    <input name={lastId} data-id={idx} id={lastId} className="dlast" placeholder='Last Name'/>
                                 </div>
                             </section>
                         )
                     })
                 }
-            <button onClick={this.props.closePopup}>Add Dependents</button>
+            <br></br>
+            <button onClick={this.submitDependents}>Save Dependents</button>
+            </div>
         </div>
       );
     }
-  }
+}
+
+export default Popup;

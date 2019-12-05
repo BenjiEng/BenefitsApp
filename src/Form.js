@@ -1,45 +1,48 @@
 import React, {Component} from 'react';
+import Popup from './Popup';
 
 class Form extends Component {
     state = {
-        people: []
+        employees: [],
+        showPopup: false,
     }
 
-    //add anew person to state
-    addPerson = (e) => {
+    //add a new person to state
+    addEmployee = (e) => {
         this.setState((prevState) => ({
-            people: [...prevState.people, {first: "", last: "", isDependent: false}]
+            employees: [...prevState.employees, {first: "", last: "", dependents: []}]
         }));
     }
 
-    change = (e) => {
+    //opens Dependent popup
+    openPopup = () => {
         this.setState({
-            [e.target.name]: e.target.value
-        });
-    };
+          showPopup: !this.state.showPopup
+        })
+    }
 
+    //save dependents to an employee
+    saveDependents = (d, idx) => {
+        this.setState({
+            showPopup: !this.state.showPopup
+        });
+        this.state.employees[idx].dependents = d;
+    }
+
+    //change on input
     handleChange = (e) => {
-        if (["first", "last", "isDependent"].includes(e.target.className) ) {
-            let people = [...this.state.people];
-            people[e.target.dataset.id][e.target.className] = e.target.value;
-            if(e.target.className === "isDependent") {
-                if (e.target.value === "on") {
-                    people[e.target.dataset.id][e.target.className] = true;
-                } else {
-                    people[e.target.dataset.id][e.target.className] = false;
-                }
-            }
-            this.setState({ people })
-        } else {
-            this.setState({ [e.target.name]: e.target.value })
+        if (["first", "last"].includes(e.target.className) ) {
+            let employees = [...this.state.employees];
+            employees[e.target.dataset.id][e.target.className] = e.target.value;
+            this.setState({ employees })
         }
     };
 
     //caller to send data to App
     onCalculate = (e) => {
-        this.props.onCalculate(this.state);
+        this.props.onCalculate(this.state.employees);
         this.setState({   
-            people: []
+            employees: []
         });
     };
 
@@ -51,23 +54,20 @@ class Form extends Component {
     render() {
         return (
             <form onSubmit={this.handleSubmit} onChange={this.handleChange}>
-                <h4>People</h4>
-                <button onClick={this.addPerson}>Add New Person</button>
+                <button onClick={this.addEmployee}>Add New Employee</button>
                 {
-                    this.state.people.map((val, idx) => {
-                        let dependentId = `dependent-${idx}`;
+                    this.state.employees.map((val, idx) => {
+                        let firstId=`first-${idx}`;
                         let lastId=`last-${idx}`;
-                        let isDependentId=`isDependent-${idx}`;
+                        let dependentId = `dependent-${idx}`;
                         return (
                             <section key={idx}>
                                 <div>
-                                    {/* <label htmlFor={dependentId}></label> */}
-                                    <input name={dependentId} data-id={idx} id={dependentId} className="first" placeholder='First Name'/>
-
-                                    {/* <label htmlFor={lastId} ></label> */}
+                                    <input name={firstId} data-id={idx} id={firstId} className="first" placeholder='First Name'/>
                                     <input name={lastId} data-id={idx} id={lastId} className="last" placeholder='Last Name'/>
-                                    <label htmlFor={isDependentId} >Dependent?</label>
-                                    <input name={isDependentId} data-id={idx} id={isDependentId} className="isDependent" type="checkbox" />
+                                    <button onClick={this.openPopup.bind(this)}>Add Dependents</button>
+                                    {/* {this.state.showPopup ? <Popup closePopup={this.togglePopup.bind(this)}></Popup>: null} */}
+                                    {this.state.showPopup ? <Popup addDependents={d => this.saveDependents(d, idx)} name={dependentId} data-id={idx} id={dependentId} className="dependents"></Popup>: null}
                                 </div>
                             </section>
                         )
