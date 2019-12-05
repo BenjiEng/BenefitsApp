@@ -22,6 +22,12 @@ class Popup extends React.Component {
         }
     };
 
+    cancelPopup = (e) => {
+        this.setState({
+            dependents: []
+        });
+        this.props.addDependents(this.state.dependents);
+    }
 
     //caller to send data to App
     submitDependents = (e) => {
@@ -57,6 +63,7 @@ class Popup extends React.Component {
                 }
             <br></br>
             <button onClick={this.submitDependents}>Save Dependents</button>
+            <button onClick={this.cancelPopup}>Cancel Popup</button>
             </div>
         </div>
       );

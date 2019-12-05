@@ -66,7 +66,6 @@ class Form extends Component {
                                     <input name={firstId} data-id={idx} id={firstId} className="first" placeholder='First Name'/>
                                     <input name={lastId} data-id={idx} id={lastId} className="last" placeholder='Last Name'/>
                                     <button onClick={this.openPopup.bind(this)}>Add Dependents</button>
-                                    {/* {this.state.showPopup ? <Popup closePopup={this.togglePopup.bind(this)}></Popup>: null} */}
                                     {this.state.showPopup ? <Popup addDependents={d => this.saveDependents(d, idx)} name={dependentId} data-id={idx} id={dependentId} className="dependents"></Popup>: null}
                                 </div>
                             </section>
