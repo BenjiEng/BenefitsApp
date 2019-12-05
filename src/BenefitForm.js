@@ -1,7 +1,8 @@
 import React, {Component} from 'react';
 import Popup from './Popup';
+import {Button} from 'react-bootstrap';
 
-class Form extends Component {
+class BenefitForm extends Component {
     state = {
         employees: [],
         showPopup: false,
@@ -54,7 +55,8 @@ class Form extends Component {
     render() {
         return (
             <form onSubmit={this.handleSubmit} onChange={this.handleChange}>
-                <button onClick={this.addEmployee}>Add New Employee</button>
+                <Button variant="outline-primary" onClick={this.addEmployee}>Add New Employee</Button>
+                <br></br>
                 {
                     this.state.employees.map((val, idx) => {
                         let firstId=`first-${idx}`;
@@ -65,7 +67,7 @@ class Form extends Component {
                                 <div>
                                     <input name={firstId} data-id={idx} id={firstId} className="first" placeholder='First Name'/>
                                     <input name={lastId} data-id={idx} id={lastId} className="last" placeholder='Last Name'/>
-                                    <button onClick={this.openPopup.bind(this)}>Add Dependents</button>
+                                    <Button variant="outline-secondary" onClick={this.openPopup.bind(this)}>Add Dependents</Button>
                                     {this.state.showPopup ? <Popup addDependents={d => this.saveDependents(d, idx)} name={dependentId} data-id={idx} id={dependentId} className="dependents"></Popup>: null}
                                 </div>
                             </section>
@@ -73,10 +75,10 @@ class Form extends Component {
                     })
                 }
                 <br></br>
-                <button onClick={e => this.onCalculate(e)}>Calculate</button>
+                <Button variant="outline-success" onClick={e => this.onCalculate(e)}>Calculate</Button>
             </form>
         );
     }
 }
 
-export default Form;
+export default BenefitForm;

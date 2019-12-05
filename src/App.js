@@ -1,10 +1,10 @@
 import React, {Component} from 'react';
 import logo from './logo.svg';
 import './App.css';
-import Form from './Form';
-import Table from 'react-bootstrap/Table';
+import BenefitForm from './BenefitForm';
+import {Table}  from 'react-bootstrap';
 import { thisExpression } from '@babel/types';
-
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 
 //find the total cost to the EMPLOYER for each employee and their dependents
@@ -38,23 +38,14 @@ class App extends Component {
     return (
       <div className="App">
           <h3>Welcome to the Employer Benefits Calculator</h3>
-          <Form onCalculate={fields => this.onSubmit(fields)}/>
+          <BenefitForm onCalculate={fields => this.onSubmit(fields)}/>
 
           <h4>Total Cost Per Year: ${this.state.totalCost.toLocaleString()}</h4>
             {this.state.employees.map((emp) => {
                 return (
-                  <table>
+                  <Table>
                     <th>{emp.first} {emp.last}</th>
                     <tbody align="left">
-                    <tr>
-                      <td></td>
-                      <td>
-                        Yearly Cost
-                      </td>
-                      <td>
-                        ${emp.costToEmployer}
-                      </td>
-                    </tr>
                     <tr>
                       <td></td>
                       <td>
@@ -87,8 +78,15 @@ class App extends Component {
                         </tr> 
                       );
                     })}
+                    <tr>
+                      <td></td>
+                      <td><h3>Yearly Cost:</h3></td>
+                      <td>
+                        ${emp.costToEmployer}
+                      </td>
+                    </tr>
                     </tbody>
-                  </table>
+                  </Table>
                 )
               })
             }

@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import {Button, Modal} from 'react-bootstrap';
 
 class Popup extends React.Component {
     state = {
@@ -44,9 +45,40 @@ class Popup extends React.Component {
 
     render() {
       return (
+
+        // <Modal.Dialog onSubmit={this.handleSubmit} onChange={this.handleChange} className='popup'>
+        //     <Modal.Header >
+        //         <Button variant="outline-primary" onClick={this.addDependent}>New Dependent</Button>
+        //     </Modal.Header>
+
+        //     <Modal.Body>
+        //     {
+        //                 this.state.dependents.map((val, idx) => {
+        //                     let firstId = `first-${idx}`;
+        //                     let lastId=`last-${idx}`;
+        //                     return (
+        //                         <section key={idx}>
+        //                             <div>
+        //                                 <input name={firstId} data-id={idx} id={firstId} className="dfirst" placeholder='First Name'/>
+        //                                 <input name={lastId} data-id={idx} id={lastId} className="dlast" placeholder='Last Name'/>
+        //                             </div>
+        //                         </section>
+        //                     )
+        //                 })
+        //             }
+        //         <br></br>
+            
+        //     </Modal.Body>
+
+        //     <Modal.Footer>
+        //         <Button variant="outline-success" onClick={this.submitDependents}>Save Dependents</Button>
+        //         <Button variant="outline-dark" onClick={this.cancelPopup}>Cancel</Button>
+        //     </Modal.Footer>
+        // </Modal.Dialog>
+
         <div className='popup' onSubmit={this.handleSubmit} onChange={this.handleChange}>
             <div class="popup-inner">
-            <button onClick={this.addDependent}>New Dependent</button>
+              <Button variant="outline-primary" onClick={this.addDependent}>New Dependent</Button>
                 {
                     this.state.dependents.map((val, idx) => {
                         let firstId = `first-${idx}`;
@@ -62,8 +94,8 @@ class Popup extends React.Component {
                     })
                 }
             <br></br>
-            <button onClick={this.submitDependents}>Save Dependents</button>
-            <button onClick={this.cancelPopup}>Cancel Popup</button>
+                <Button variant="outline-success" onClick={this.submitDependents}>Save Dependents</Button>
+                <Button variant="outline-dark" onClick={this.cancelPopup}>Cancel</Button>
             </div>
         </div>
       );
